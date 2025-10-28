@@ -36,7 +36,7 @@ namespace TarjetaSube.Tests
             
             Boleto boleto = colectivo.PagarCon(tarjeta);
             
-            Assert.IsNull(boleto);
+            Assert.IsNull(boleto); // Debe ser null porque no hay saldo suficiente
             Assert.AreEqual(1000, tarjeta.Saldo);
         }
 

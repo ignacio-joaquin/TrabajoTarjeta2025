@@ -25,6 +25,7 @@ namespace TarjetaSube
             }
 
             int montoAPagar = tarjeta.CalcularMontoPasaje(TARIFA_BASICA);
+            int saldoAnterior = tarjeta.Saldo;
             
             if (!tarjeta.Descontar(montoAPagar))
             {

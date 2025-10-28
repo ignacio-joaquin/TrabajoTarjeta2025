@@ -39,35 +39,25 @@ namespace TarjetaSube
                 return false;
             }
 
-            // Si hay saldo negativo, primero se descuenta
-            if (saldo < 0)
-            {
-                int saldoARecuperar = Math.Min(importe, Math.Abs(saldo));
-                saldo += saldoARecuperar;
-                importe -= saldoARecuperar;
-                
-                // Si hay viajes Plus, descontarlos
-                if (importe > 0 && viajesPlus > 0)
-                {
-                    int montoViajesPlus = viajesPlus * 1580;
-                    int descuento = Math.Min(importe, montoViajesPlus);
-                    saldo += descuento;
-                    viajesPlus = 0;
-                }
-            }
-            else if (viajesPlus > 0)
-            {
-                // Descontar viajes Plus si existe saldo positivo
-                int montoViajesPlus = viajesPlus * 1580;
-                int descuento = Math.Min(importe, montoViajesPlus);
-                saldo += descuento;
-                importe -= descuento;
-                viajesPlus = 0;
-            }
-
-            if (importe > 0 && saldo + importe > LIMITE_SALDO)
+            if (saldo + importe > LIMITE_SALDO)
             {
                 return false;
+            }
+
+            // Si hay viajes Plus pendientes, descontarlos primero
+            if (viajesPlus > 0)
+            {
+                int montoViajesPlus = viajesPlus * 1580;
+                if (importe >= montoViajesPlus)
+                {
+                    importe -= montoViajesPlus;
+                    viajesPlus = 0;
+                }
+                else
+                {
+                    viajesPlus -= (int)Math.Ceiling((double)importe / 1580);
+                    importe = 0;
+                }
             }
 
             saldo += importe;
@@ -83,20 +73,21 @@ namespace TarjetaSube
             }
 
             // Aplicar descuento para medio boleto
+            int montoReal = monto;
             if (this is MedioBoletoEstudiantil)
             {
-                monto = monto / 2;
+                montoReal = monto / 2;
             }
 
-            if (saldo >= monto)
+            if (saldo >= montoReal)
             {
-                saldo -= monto;
+                saldo -= montoReal;
                 return true;
             }
-            else if (saldo - monto >= LIMITE_NEGATIVO && viajesPlus < MAX_VIAJES_PLUS)
+            else if (saldo - montoReal >= LIMITE_NEGATIVO && viajesPlus < MAX_VIAJES_PLUS)
             {
                 // Viaje Plus
-                saldo -= monto;
+                saldo -= montoReal;
                 viajesPlus++;
                 return true;
             }
