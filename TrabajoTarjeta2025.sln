@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TarjetaSube", "TarjetaSube\TarjetaSube.csproj", "{F1DA2A9C-BA7E-4E13-A757-F6966C55E5C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TarjetaSube", "Tarjeta\Tarjeta.csproj", "{F1DA2A9C-BA7E-4E13-A757-F6966C55E5C1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TarjetaSubeTest", "TarjetaSubeTest\TarjetaSubeTest.csproj", "{886C5EBC-94A3-4FE8-9D23-9632AC411503}"
 EndProject
