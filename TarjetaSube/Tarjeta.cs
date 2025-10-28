@@ -1,28 +1,52 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace TarjetaSube
 {
     public class Tarjeta
     {
         private int saldo;
-        public Tarjeta(int saldo = 0)
+        private const int LIMITE_SALDO = 40000;
+        private static readonly HashSet<int> CargasAceptadas = new HashSet<int> 
+        { 
+            2000, 3000, 4000, 5000, 8000, 10000, 15000, 20000, 25000, 30000 
+        };
+
+        public Tarjeta(int saldoInicial = 0)
         {
-            this.saldo = saldo;
+            this.saldo = saldoInicial;
         }
 
         public int Saldo
         {
             get { return saldo; }
-            set { saldo = value; }
         }
         
-        public void Cargar(int importe)
+        public bool Cargar(int importe)
         {
+            if (!CargasAceptadas.Contains(importe))
+            {
+                return false;
+            }
+
+            if (saldo + importe > LIMITE_SALDO)
+            {
+                return false;
+            }
+
             saldo += importe;
+            return true;
         }
-        public void Pagar()
+
+        public bool Descontar(int monto)
         {
-            saldo -= 50;
+            if (saldo < monto)
+            {
+                return false;
+            }
+
+            saldo -= monto;
+            return true;
         }
     }
 }
