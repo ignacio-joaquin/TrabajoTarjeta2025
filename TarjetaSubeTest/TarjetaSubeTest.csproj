@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TarjetaSube\TarjetaSube.csproj" />
+    <ProjectReference Include="..\Tarjeta\Tarjeta.csproj" />
   </ItemGroup>
 
 </Project>
