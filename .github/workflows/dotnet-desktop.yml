@@ -36,5 +36,7 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./**/coverage.cobertura.xml
+        files: ./coverage/**/coverage.cobertura.xml
+        flags: unittests
+        fail_ci_if_error: false  # Don't fail if Codecov has issues
+        verbose: true
