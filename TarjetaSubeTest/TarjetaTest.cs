@@ -155,4 +155,109 @@ namespace TarjetaSube.Tests
             Assert.AreEqual(1000, tarjeta.Saldo);
         }
     }
+        [TestFixture]
+    public class TarjetaTestsIteracion2
+    {
+        [Test]
+        public void TestSaldoNegativoPermitido()
+        {
+            Tarjeta tarjeta = new Tarjeta(1000);
+            Colectivo colectivo = new Colectivo("K");
+            
+            // Primer viaje - queda en negativo
+            Boleto boleto1 = colectivo.PagarCon(tarjeta);
+            Assert.IsNotNull(boleto1);
+            Assert.AreEqual(-580, tarjeta.Saldo);
+            Assert.AreEqual(1, tarjeta.ViajesPlus);
+            
+            // Segundo viaje - sigue en negativo
+            Boleto boleto2 = colectivo.PagarCon(tarjeta);
+            Assert.IsNotNull(boleto2);
+            Assert.AreEqual(-2160, tarjeta.Saldo);
+            Assert.AreEqual(2, tarjeta.ViajesPlus);
+            
+            // Tercer viaje - no permitido (límite negativo)
+            Boleto boleto3 = colectivo.PagarCon(tarjeta);
+            Assert.IsNull(boleto3);
+            Assert.AreEqual(-2160, tarjeta.Saldo);
+        }
+
+        [Test]
+        public void TestCargarConSaldoNegativo()
+        {
+            Tarjeta tarjeta = new Tarjeta(1000);
+            Colectivo colectivo = new Colectivo("K");
+            
+            // Hacer dos viajes Plus
+            colectivo.PagarCon(tarjeta);
+            colectivo.PagarCon(tarjeta);
+            
+            Assert.AreEqual(-2160, tarjeta.Saldo);
+            Assert.AreEqual(2, tarjeta.ViajesPlus);
+            
+            // Cargar tarjeta - debe descontar viajes Plus primero
+            bool cargaExitosa = tarjeta.Cargar(5000);
+            Assert.IsTrue(cargaExitosa);
+            Assert.AreEqual(500, tarjeta.Saldo); // 5000 - 1580*2 - 2160 = 500
+            Assert.AreEqual(0, tarjeta.ViajesPlus);
+        }
+
+        [Test]
+        public void TestFranquiciaCompletaSiemprePuedePagar()
+        {
+            FranquiciaCompleta tarjeta = new FranquiciaCompleta(0);
+            Colectivo colectivo = new Colectivo("142");
+            
+            // Debe poder pagar incluso con saldo 0
+            Boleto boleto = colectivo.PagarCon(tarjeta);
+            
+            Assert.IsNotNull(boleto);
+            Assert.AreEqual(0, boleto.Monto); // Viaje gratuito
+            Assert.AreEqual(0, tarjeta.Saldo);
+        }
+
+        [Test]
+        public void TestMedioBoletoPagaMitad()
+        {
+            MedioBoletoEstudiantil tarjeta = new MedioBoletoEstudiantil(1000);
+            Colectivo colectivo = new Colectivo("K");
+            
+            Boleto boleto = colectivo.PagarCon(tarjeta);
+            
+            Assert.IsNotNull(boleto);
+            Assert.AreEqual(790, boleto.Monto); // 1580 / 2 = 790
+            Assert.AreEqual(210, tarjeta.Saldo); // 1000 - 790 = 210
+        }
+
+        [Test]
+        public void TestBoletoGratuitoEstudiantil()
+        {
+            BoletoGratuitoEstudiantil tarjeta = new BoletoGratuitoEstudiantil(0);
+            Colectivo colectivo = new Colectivo("144");
+            
+            Boleto boleto = colectivo.PagarCon(tarjeta);
+            
+            Assert.IsNotNull(boleto);
+            Assert.AreEqual(0, boleto.Monto);
+            Assert.AreEqual(0, tarjeta.Saldo);
+        }
+
+        [Test]
+        public void TestViajesPlusConFranquicia()
+        {
+            MedioBoletoEstudiantil tarjeta = new MedioBoletoEstudiantil(500);
+            Colectivo colectivo = new Colectivo("K");
+            
+            // Primer viaje - medio boleto normal
+            Boleto boleto1 = colectivo.PagarCon(tarjeta);
+            Assert.IsNotNull(boleto1);
+            Assert.AreEqual(790, boleto1.Monto);
+            
+            // Segundo viaje - medio boleto con Plus
+            Boleto boleto2 = colectivo.PagarCon(tarjeta);
+            Assert.IsNotNull(boleto2);
+            Assert.AreEqual(790, boleto2.Monto);
+            Assert.AreEqual(1, tarjeta.ViajesPlus);
+        }
+    }
 }

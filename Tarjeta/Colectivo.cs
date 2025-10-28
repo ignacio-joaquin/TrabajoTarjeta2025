@@ -24,12 +24,14 @@ namespace TarjetaSube
                 return null;
             }
 
-            if (!tarjeta.Descontar(TARIFA_BASICA))
+            int montoAPagar = tarjeta.CalcularMontoPasaje(TARIFA_BASICA);
+            
+            if (!tarjeta.Descontar(montoAPagar))
             {
                 return null;
             }
 
-            return new Boleto(TARIFA_BASICA, this.linea, tarjeta.Saldo);
+            return new Boleto(montoAPagar, this.linea, tarjeta.Saldo);
         }
     }
 }
