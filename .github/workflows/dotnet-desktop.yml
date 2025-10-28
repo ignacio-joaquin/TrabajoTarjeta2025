@@ -9,33 +9,30 @@ on:
       - '**'
 
 jobs:
+
   build-and-test:
+
     runs-on: windows-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Better for Codecov analysis
+
    
     - name: Setup .NET 5.0
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '5.0.x'
-    
+
     - name: Restore dependencies
       run: dotnet restore
-    
+
     - name: Build
-      run: dotnet build --configuration Release --no-restore
-    
+      run: dotnet build --no-restore
+
     - name: Run tests with coverage
-      run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
-    
-    - name: List coverage files (debug)
-      run: Get-ChildItem -Path ./coverage -Recurse -Filter "*.xml"
-      shell: pwsh
-    
+      run: dotnet test --no-build --collect:"XPlat Code Coverage"
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
       with:
