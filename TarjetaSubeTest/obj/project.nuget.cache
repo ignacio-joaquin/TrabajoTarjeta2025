@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "dgSpecHash": "6uzyiMIsU4P9ei8fqFerwgysaX7uNWky0dDXl6nXbH55AlEaskHEnQhv83G8CRjJ2wlzsNCmhyfPBuYiyRsndA==",
+  "success": true,
+  "projectFilePath": "/home/nasho/Desktop/gonzales/TrabajoTarjeta2025/TarjetaSubeTest/TarjetaSubeTest.csproj",
+  "expectedPackageFiles": [
+    "/home/nasho/.nuget/packages/coverlet.collector/6.0.2/coverlet.collector.6.0.2.nupkg.sha512",
+    "/home/nasho/.nuget/packages/microsoft.applicationinsights/2.23.0/microsoft.applicationinsights.2.23.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/microsoft.net.test.sdk/18.0.0/microsoft.net.test.sdk.18.0.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/microsoft.testing.extensions.telemetry/1.9.0/microsoft.testing.extensions.telemetry.1.9.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/microsoft.testing.extensions.trxreport.abstractions/1.9.0/microsoft.testing.extensions.trxreport.abstractions.1.9.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/microsoft.testing.extensions.vstestbridge/1.9.0/microsoft.testing.extensions.vstestbridge.1.9.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/microsoft.testing.platform/1.9.0/microsoft.testing.platform.1.9.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/microsoft.testing.platform.msbuild/1.9.0/microsoft.testing.platform.msbuild.1.9.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/microsoft.testplatform.adapterutilities/17.13.0/microsoft.testplatform.adapterutilities.17.13.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/microsoft.testplatform.objectmodel/17.13.0/microsoft.testplatform.objectmodel.17.13.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/nunit/4.4.0/nunit.4.4.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/nunit3testadapter/5.2.0/nunit3testadapter.5.2.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/system.diagnostics.diagnosticsource/6.0.0/system.diagnostics.diagnosticsource.6.0.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/system.reflection.metadata/1.6.0/system.reflection.metadata.1.6.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/system.runtime.compilerservices.unsafe/6.0.0/system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/xunit/2.9.2/xunit.2.9.2.nupkg.sha512",
+    "/home/nasho/.nuget/packages/xunit.abstractions/2.0.3/xunit.abstractions.2.0.3.nupkg.sha512",
+    "/home/nasho/.nuget/packages/xunit.analyzers/1.16.0/xunit.analyzers.1.16.0.nupkg.sha512",
+    "/home/nasho/.nuget/packages/xunit.assert/2.9.2/xunit.assert.2.9.2.nupkg.sha512",
+    "/home/nasho/.nuget/packages/xunit.core/2.9.2/xunit.core.2.9.2.nupkg.sha512",
+    "/home/nasho/.nuget/packages/xunit.extensibility.core/2.9.2/xunit.extensibility.core.2.9.2.nupkg.sha512",
+    "/home/nasho/.nuget/packages/xunit.extensibility.execution/2.9.2/xunit.extensibility.execution.2.9.2.nupkg.sha512",
+    "/home/nasho/.nuget/packages/xunit.runner.visualstudio/2.8.2/xunit.runner.visualstudio.2.8.2.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'xunit.runner.visualstudio 2.8.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
+      "libraryId": "xunit.runner.visualstudio",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    }
+  ]
+}
