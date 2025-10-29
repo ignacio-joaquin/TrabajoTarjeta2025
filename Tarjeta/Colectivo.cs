@@ -54,6 +54,12 @@ namespace Tarjeta
                 medioBoletoRegistro.RegistrarViaje();
             }
 
+            // Registrar el viaje para Boleto Gratuito
+            if (tarjeta is BoletoGratuitoEstudiantil boletoGratuitoRegistro)
+            {
+                boletoGratuitoRegistro.RegistrarViaje();
+            }
+
             return new Boleto(montoAPagar, this.linea, tarjeta.Saldo, 
                             tarjeta.TipoTarjeta, tarjeta.Id, montoTotalAbonado, tuvoRecargo);
         }

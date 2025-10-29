@@ -1,9 +1,22 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Tarjeta
 {
     public class BoletoGratuitoEstudiantil : Tarjeta
     {
-        public BoletoGratuitoEstudiantil(int saldoInicial = 0) : base(saldoInicial) { }
-        public BoletoGratuitoEstudiantil(int saldoInicial, string id) : base(saldoInicial, id) { }
+        private List<DateTime> viajesDelDia;
+        
+        public BoletoGratuitoEstudiantil(int saldoInicial = 0) : base(saldoInicial) 
+        {
+            viajesDelDia = new List<DateTime>();
+        }
+        
+        public BoletoGratuitoEstudiantil(int saldoInicial, string id) : base(saldoInicial, id) 
+        {
+            viajesDelDia = new List<DateTime>();
+        }
 
         public override string TipoTarjeta
         {
@@ -12,18 +25,57 @@ namespace Tarjeta
 
         public override bool Descontar(int monto)
         {
-            return true;
+            // Para viajes gratuitos siempre permite el viaje
+            // Para viajes pagos verifica el saldo
+            if (monto == 0)
+            {
+                return true;
+            }
+            return base.Descontar(monto);
         }
 
         public override int CalcularMontoPasaje(int tarifaBase)
         {
-            return 0;
+            LimpiarViajesAntiguos();
+            
+            // Primeros dos viajes del día son gratuitos
+            if (viajesDelDia.Count < 2)
+            {
+                return 0;
+            }
+            
+            // A partir del tercer viaje, tarifa completa
+            return tarifaBase;
         }
 
         public override int CalcularMontoRealAPagar(int tarifaBase, out bool tuvoRecargo)
         {
             tuvoRecargo = false;
-            return 0;
+            return CalcularMontoPasaje(tarifaBase);
+        }
+
+        public void RegistrarViaje()
+        {
+            DateTime ahora = DateTimeProvider.Now;
+            viajesDelDia.Add(ahora);
+        }
+
+        public int ViajesHoy()
+        {
+            LimpiarViajesAntiguos();
+            return viajesDelDia.Count;
+        }
+
+        private void LimpiarViajesAntiguos()
+        {
+            DateTime hoy = DateTimeProvider.Now.Date;
+            viajesDelDia = viajesDelDia.Where(v => v.Date == hoy).ToList();
+        }
+
+        // Método para testing - permite establecer viajes específicos
+        public void SetViajesParaTesting(List<DateTime> viajes)
+        {
+            this.viajesDelDia = viajes;
         }
     }
 }
