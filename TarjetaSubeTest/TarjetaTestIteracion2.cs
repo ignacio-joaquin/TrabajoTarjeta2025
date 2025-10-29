@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using TarjetaSube;
+using Tarjeta;
 
-namespace TarjetaSube.Tests
+namespace Tarjeta.Tests
 {
     [TestFixture]
     public class TarjetaTestsIteracion2

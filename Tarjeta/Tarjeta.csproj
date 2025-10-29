@@ -2,8 +2,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <StartupObject>TarjetaSube.Program</StartupObject>
+    <StartupObject>Tarjeta.Program</StartupObject>
   </PropertyGroup>
-  <ItemGroup>
-  </ItemGroup>
 </Project>

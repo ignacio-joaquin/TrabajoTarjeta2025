@@ -1,12 +1,17 @@
-﻿public class Tarjeta
+﻿using System;
+using System.Collections.Generic;
+
+namespace Tarjeta
+{
+    public class Tarjeta
 {
     private int saldo;
     private const int LIMITE_SALDO = 40000;
     private const int LIMITE_NEGATIVO = -1200;
-    
-    private static readonly HashSet<int> CargasAceptadas = new HashSet<int> 
-    { 
-        2000, 3000, 4000, 5000, 8000, 10000, 15000, 20000, 25000, 30000 
+
+    private static readonly HashSet<int> CargasAceptadas = new HashSet<int>
+    {
+        2000, 3000, 4000, 5000, 8000, 10000, 15000, 20000, 25000, 30000
     };
 
     public Tarjeta(int saldoInicial = 0)
@@ -75,4 +80,5 @@
             return tarifaBase;
         }
     }
+}
 }
