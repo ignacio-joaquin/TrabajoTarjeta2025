@@ -1,6 +1,6 @@
 using System;
 
-namespace TarjetaSube
+namespace Tarjeta
 {
     public class Colectivo
     {

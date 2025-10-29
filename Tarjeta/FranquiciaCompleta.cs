@@ -1,4 +1,4 @@
-namespace TarjetaSube
+namespace Tarjeta
 {
     public class FranquiciaCompleta : Tarjeta
     {

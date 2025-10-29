@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using TarjetaSube;
+using Tarjeta;
 
-namespace TarjetaSube.Tests
+namespace Tarjeta.Tests
 {
     [TestFixture]
     public class ColectivoTests
@@ -29,18 +29,6 @@ namespace TarjetaSube.Tests
         }
 
         [Test]
-        public void TestPagarConTarjetaSinSaldo()
-        {
-            Colectivo colectivo = new Colectivo("K");
-            Tarjeta tarjeta = new Tarjeta(1000);
-            
-            Boleto boleto = colectivo.PagarCon(tarjeta);
-            
-            Assert.IsNull(boleto); // Debe ser null porque no hay saldo suficiente
-            Assert.AreEqual(1000, tarjeta.Saldo);
-        }
-
-        [Test]
         public void TestPagarConTarjetaNull()
         {
             Colectivo colectivo = new Colectivo("K");
@@ -55,12 +43,24 @@ namespace TarjetaSube.Tests
         {
             Colectivo colectivo = new Colectivo("144");
             Tarjeta tarjeta = new Tarjeta(1580);
-            
+
             Boleto boleto = colectivo.PagarCon(tarjeta);
-            
+
             Assert.IsNotNull(boleto);
             Assert.AreEqual(0, tarjeta.Saldo);
             Assert.AreEqual(0, boleto.SaldoRestante);
+        }
+        [Test]
+        public void TestPagarConTarjetaSinSaldo()
+        {
+            Colectivo colectivo = new Colectivo("K");
+            Tarjeta tarjeta = new Tarjeta(1000);
+            
+            // Con límite de -1200, 1000 - 1580 = -580 ESTÁ permitido
+            Boleto boleto = colectivo.PagarCon(tarjeta);
+            
+            Assert.IsNotNull(boleto); // Ahora debe ser NOT null
+            Assert.AreEqual(-580, tarjeta.Saldo);
         }
     }
 }

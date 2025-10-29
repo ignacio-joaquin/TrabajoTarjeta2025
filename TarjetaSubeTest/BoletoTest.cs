@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using TarjetaSube;
+using Tarjeta;
 using System;
 
-namespace TarjetaSube.Tests
+namespace Tarjeta.Tests
 {
     [TestFixture]
     public class BoletoTests
