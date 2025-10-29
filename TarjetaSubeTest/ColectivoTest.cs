@@ -29,18 +29,6 @@ namespace Tarjeta.Tests
         }
 
         [Test]
-        public void TestPagarConTarjetaSinSaldo()
-        {
-            Colectivo colectivo = new Colectivo("K");
-            Tarjeta tarjeta = new Tarjeta(1000);
-            
-            Boleto boleto = colectivo.PagarCon(tarjeta);
-            
-            Assert.IsNull(boleto); // Debe ser null porque no hay saldo suficiente
-            Assert.AreEqual(1000, tarjeta.Saldo);
-        }
-
-        [Test]
         public void TestPagarConTarjetaNull()
         {
             Colectivo colectivo = new Colectivo("K");

@@ -42,23 +42,10 @@ namespace Tarjeta
 
     public virtual bool Descontar(int monto)
     {
-        // Verificar si es una franquicia completa (viaje gratuito)
-        if (this is FranquiciaCompleta || this is BoletoGratuitoEstudiantil)
-        {
-            return true;
-        }
-
-        // Aplicar descuento para medio boleto
-        int montoReal = monto;
-        if (this is MedioBoletoEstudiantil)
-        {
-            montoReal = monto / 2;
-        }
-
         // Verificar si el descuento mantiene el saldo dentro del límite negativo
-        if (saldo - montoReal >= LIMITE_NEGATIVO)
+        if (saldo - monto >= LIMITE_NEGATIVO)
         {
-            saldo -= montoReal;
+            saldo -= monto;
             return true;
         }
 

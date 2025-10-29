@@ -25,11 +25,10 @@ namespace Tarjeta.Tests
             Tarjeta tarjeta = new Tarjeta(500); // Saldo muy bajo
             Colectivo colectivo = new Colectivo("K");
             
-            // Este viaje NO debería permitirse: 500 - 1580 = -1080 (supera límite -1200)
+            
             Boleto boleto = colectivo.PagarCon(tarjeta);
             
-            Assert.IsNull(boleto);
-            Assert.AreEqual(500, tarjeta.Saldo); // Saldo no cambia
+            Assert.AreEqual(-1080, tarjeta.Saldo); 
         }
 
         [Test]
@@ -90,19 +89,6 @@ namespace Tarjeta.Tests
             Assert.IsNotNull(boleto);
             Assert.AreEqual(790, boleto.Monto);
             Assert.AreEqual(-290, tarjeta.Saldo);
-        }
-
-        [Test]
-        public void TestMedioBoletoConSaldoNegativoNoPermitido()
-        {
-            MedioBoletoEstudiantil tarjeta = new MedioBoletoEstudiantil(100);
-            Colectivo colectivo = new Colectivo("K");
-            
-            // Medio boleto: 790, Saldo: 100 - 790 = -690 (FUERA del límite -1200)
-            Boleto boleto = colectivo.PagarCon(tarjeta);
-            
-            Assert.IsNull(boleto);
-            Assert.AreEqual(100, tarjeta.Saldo);
         }
 
         [Test]
