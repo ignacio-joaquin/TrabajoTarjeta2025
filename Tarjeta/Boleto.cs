@@ -17,7 +17,7 @@ namespace Tarjeta
         {
             this.monto = monto;
             this.linea = linea;
-            this.fecha = DateTime.Now;
+            this.fecha = DateTimeProvider.Now;
             this.saldoRestante = saldoRestante;
             this.tipoTarjeta = tipoTarjeta;
             this.idTarjeta = idTarjeta;
@@ -25,7 +25,6 @@ namespace Tarjeta
             this.tuvoRecargo = tuvoRecargo;
         }
 
-        // Constructor para testing que permite establecer fecha específica
         public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado, bool tuvoRecargo, DateTime fechaEspecifica)
         {
             this.monto = monto;

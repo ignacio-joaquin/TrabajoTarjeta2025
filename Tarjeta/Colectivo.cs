@@ -24,21 +24,34 @@ namespace Tarjeta
                 return null;
             }
 
+            // Validaciones específicas para Medio Boleto
+            if (tarjeta is MedioBoletoEstudiantil medioBoleto)
+            {
+                if (!medioBoleto.PuedeViajar())
+                {
+                    return null; // No pasaron 5 minutos desde el último viaje
+                }
+            }
+
             bool tuvoRecargo;
             int montoAPagar = tarjeta.CalcularMontoRealAPagar(TARIFA_BASICA, out tuvoRecargo);
             int saldoAnterior = tarjeta.Saldo;
             
-            // Si hay saldo negativo y el monto a pagar es mayor que el saldo disponible,
-            // calculamos el monto total abonado (incluyendo la deuda)
             int montoTotalAbonado = montoAPagar;
             if (saldoAnterior < 0 && montoAPagar > 0)
             {
-                montoTotalAbonado = montoAPagar - saldoAnterior; // Restamos porque saldoAnterior es negativo
+                montoTotalAbonado = montoAPagar - saldoAnterior;
             }
 
             if (!tarjeta.Descontar(montoAPagar))
             {
                 return null;
+            }
+
+            // Registrar el viaje para Medio Boleto
+            if (tarjeta is MedioBoletoEstudiantil medioBoletoRegistro)
+            {
+                medioBoletoRegistro.RegistrarViaje();
             }
 
             return new Boleto(montoAPagar, this.linea, tarjeta.Saldo, 
