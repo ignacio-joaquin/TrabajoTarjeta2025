@@ -36,9 +36,9 @@ namespace Tarjeta
             return tarifaBase / 2;
         }
 
-        public override int CalcularMontoRealAPagar(int tarifaBase, out bool tuvoRecargo)
+        public override int CalcularMontoRealAPagar(int tarifaBase)
         {
-            tuvoRecargo = false;
+
             return CalcularMontoPasaje(tarifaBase);
         }
 

@@ -11,9 +11,9 @@ namespace Tarjeta
         private string tipoTarjeta;
         private string idTarjeta;
         private int montoTotalAbonado;
-        private bool tuvoRecargo;
+        private int descuentoFrecuente;
 
-        public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado, bool tuvoRecargo)
+        public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado)
         {
             this.monto = monto;
             this.linea = linea;
@@ -22,10 +22,10 @@ namespace Tarjeta
             this.tipoTarjeta = tipoTarjeta;
             this.idTarjeta = idTarjeta;
             this.montoTotalAbonado = montoTotalAbonado;
-            this.tuvoRecargo = tuvoRecargo;
+            this.descuentoFrecuente = 0;
         }
 
-        public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado, bool tuvoRecargo, DateTime fechaEspecifica)
+        public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado, DateTime fechaEspecifica)
         {
             this.monto = monto;
             this.linea = linea;
@@ -34,7 +34,19 @@ namespace Tarjeta
             this.tipoTarjeta = tipoTarjeta;
             this.idTarjeta = idTarjeta;
             this.montoTotalAbonado = montoTotalAbonado;
-            this.tuvoRecargo = tuvoRecargo;
+            this.descuentoFrecuente = 0;
+        }
+
+        public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado, int descuentoFrecuente)
+        {
+            this.monto = monto;
+            this.linea = linea;
+            this.fecha = DateTimeProvider.Now;
+            this.saldoRestante = saldoRestante;
+            this.tipoTarjeta = tipoTarjeta;
+            this.idTarjeta = idTarjeta;
+            this.montoTotalAbonado = montoTotalAbonado;
+            this.descuentoFrecuente = descuentoFrecuente;
         }
 
         public int Monto
@@ -72,16 +84,17 @@ namespace Tarjeta
             get { return montoTotalAbonado; }
         }
 
-        public bool TuvoRecargo
+        public int DescuentoFrecuente
         {
-            get { return tuvoRecargo; }
+            get { return descuentoFrecuente; }
         }
 
         public override string ToString()
         {
-            string recargoInfo = tuvoRecargo ? $" (incluye recargo por saldo negativo)" : "";
+            string descuentoInfo = descuentoFrecuente > 0 ? $" [Descuento frecuente: -${descuentoFrecuente}]" : "";
             return $"Boleto - Línea: {linea}, Tipo: {tipoTarjeta}, ID: {idTarjeta}, " +
-                   $"Monto: ${monto}{recargoInfo}, Total abonado: ${montoTotalAbonado}, " +
+                   $"Monto: ${monto}{descuentoInfo}, " +
+                   $"Total abonado: ${montoTotalAbonado}, " +
                    $"Fecha: {fecha:dd/MM/yyyy HH:mm}, Saldo restante: ${saldoRestante}";
         }
     }

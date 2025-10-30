@@ -23,9 +23,9 @@ namespace Tarjeta
             return 0;
         }
 
-        public override int CalcularMontoRealAPagar(int tarifaBase, out bool tuvoRecargo)
+        public override int CalcularMontoRealAPagar(int tarifaBase)
         {
-            tuvoRecargo = false;
+
             return 0;
         }
     }

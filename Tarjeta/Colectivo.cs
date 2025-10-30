@@ -33,8 +33,12 @@ namespace Tarjeta
                 }
             }
 
-            bool tuvoRecargo;
-            int montoAPagar = tarjeta.CalcularMontoRealAPagar(TARIFA_BASICA, out tuvoRecargo);
+            // Calcular el monto base según el tipo de tarjeta
+            int montoBase = tarjeta.CalcularMontoPasaje(TARIFA_BASICA);
+            
+            // Aplicar descuento por uso frecuente
+            int montoAPagar = tarjeta.CalcularMontoConDescuentoFrecuente(montoBase);
+            
             int saldoAnterior = tarjeta.Saldo;
             
             int montoTotalAbonado = montoAPagar;
@@ -48,20 +52,26 @@ namespace Tarjeta
                 return null;
             }
 
-            // Registrar el viaje para Medio Boleto
+            // Registrar el viaje para todos los tipos de tarjeta
+            tarjeta.RegistrarViaje();
+
+            // Registrar el viaje específico para Medio Boleto (para control de 5 minutos)
             if (tarjeta is MedioBoletoEstudiantil medioBoletoRegistro)
             {
                 medioBoletoRegistro.RegistrarViaje();
             }
 
-            // Registrar el viaje para Boleto Gratuito
+            // Registrar el viaje específico para Boleto Gratuito (para control de 2 viajes gratis)
             if (tarjeta is BoletoGratuitoEstudiantil boletoGratuitoRegistro)
             {
                 boletoGratuitoRegistro.RegistrarViaje();
             }
 
+            // Calcular el descuento frecuente aplicado
+            int descuentoFrecuente = montoBase - montoAPagar;
+
             return new Boleto(montoAPagar, this.linea, tarjeta.Saldo, 
-                            tarjeta.TipoTarjeta, tarjeta.Id, montoTotalAbonado, tuvoRecargo);
+                            tarjeta.TipoTarjeta, tarjeta.Id, montoTotalAbonado, descuentoFrecuente);
         }
     }
 }

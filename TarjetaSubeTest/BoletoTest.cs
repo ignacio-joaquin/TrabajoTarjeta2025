@@ -24,7 +24,7 @@ namespace Tarjeta.Tests
             Assert.AreEqual("Normal", boleto.TipoTarjeta);
             Assert.AreEqual("TEST001", boleto.IdTarjeta);
             Assert.AreEqual(1580, boleto.MontoTotalAbonado);
-            Assert.IsFalse(boleto.TuvoRecargo);
+
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Tarjeta.Tests
             Assert.AreEqual("Franquicia Completa", boleto.TipoTarjeta);
             Assert.AreEqual("FC001", boleto.IdTarjeta);
             Assert.AreEqual(0, boleto.MontoTotalAbonado);
-            Assert.IsFalse(boleto.TuvoRecargo);
+
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace Tarjeta.Tests
             Assert.AreEqual("Medio Boleto Estudiantil", boleto.TipoTarjeta);
             Assert.AreEqual("MB001", boleto.IdTarjeta);
             Assert.AreEqual(790, boleto.MontoTotalAbonado);
-            Assert.IsFalse(boleto.TuvoRecargo);
+
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace Tarjeta.Tests
             Assert.AreEqual("Boleto Gratuito Estudiantil", boleto.TipoTarjeta);
             Assert.AreEqual("BG001", boleto.IdTarjeta);
             Assert.AreEqual(0, boleto.MontoTotalAbonado);
-            Assert.IsFalse(boleto.TuvoRecargo);
+
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace Tarjeta.Tests
             Assert.AreEqual("TEST002", boleto.IdTarjeta);
             // Total abonado = monto (1580) - saldo negativo anterior (0) = 1580
             Assert.AreEqual(1580, boleto.MontoTotalAbonado);
-            Assert.IsFalse(boleto.TuvoRecargo);
+
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace Tarjeta.Tests
         {
             DateTime fechaEspecifica = new DateTime(2024, 1, 15, 14, 30, 0);
             Boleto boleto = new Boleto(1580, "142", 3420, "Normal", "TEST004", 
-                                     1580, false, fechaEspecifica);
+                                     1580,  fechaEspecifica);
             
             Assert.AreEqual(fechaEspecifica, boleto.Fecha);
             Assert.AreEqual(1580, boleto.Monto);
@@ -133,7 +133,7 @@ namespace Tarjeta.Tests
             Assert.AreEqual("Normal", boleto.TipoTarjeta);
             Assert.AreEqual("TEST004", boleto.IdTarjeta);
             Assert.AreEqual(1580, boleto.MontoTotalAbonado);
-            Assert.IsFalse(boleto.TuvoRecargo);
+
         }
 
         [Test]
@@ -143,19 +143,19 @@ namespace Tarjeta.Tests
             
             // Test con fecha específica
             Boleto boleto1 = new Boleto(1580, "K", 5000, "Normal", "TEST005", 
-                                      1580, false, fechaBase);
+                                      1580,  fechaBase);
             Assert.AreEqual(fechaBase, boleto1.Fecha);
             
             // Test sumando días
             DateTime fechaConDias = fechaBase.AddDays(5);
             Boleto boleto2 = new Boleto(1580, "142", 5000, "Normal", "TEST006", 
-                                      1580, false, fechaConDias);
+                                      1580,  fechaConDias);
             Assert.AreEqual(fechaBase.AddDays(5), boleto2.Fecha);
             
             // Test sumando horas
             DateTime fechaConHoras = fechaBase.AddHours(2.5);
             Boleto boleto3 = new Boleto(1580, "144", 5000, "Normal", "TEST007", 
-                                      1580, false, fechaConHoras);
+                                      1580,  fechaConHoras);
             Assert.AreEqual(fechaBase.AddHours(2.5), boleto3.Fecha);
         }
 
