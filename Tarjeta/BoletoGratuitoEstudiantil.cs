@@ -31,7 +31,9 @@ namespace Tarjeta
             {
                 return true;
             }
-            return base.Descontar(monto);
+            
+            bool resultado = base.Descontar(monto);
+            return resultado;
         }
 
         public override int CalcularMontoPasaje(int tarifaBase)

@@ -12,6 +12,9 @@ namespace Tarjeta
 
         public override bool Descontar(int monto)
         {
+            // Viaje gratuito - siempre permite el viaje
+            // Pero aún así llamamos a base.Descontar para que acredite saldo pendiente si existe
+            base.Descontar(0);
             return true;
         }
 

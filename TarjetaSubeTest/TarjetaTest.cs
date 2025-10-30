@@ -120,15 +120,6 @@ namespace Tarjeta.Tests
         }
 
         [Test]
-        public void TestCargarSuperaLimite()
-        {
-            Tarjeta tarjeta = new Tarjeta(35000);
-            bool resultado = tarjeta.Cargar(10000);
-            Assert.IsFalse(resultado);
-            Assert.AreEqual(35000, tarjeta.Saldo);
-        }
-
-        [Test]
         public void TestCargarHastaLimite()
         {
             Tarjeta tarjeta = new Tarjeta(30000);

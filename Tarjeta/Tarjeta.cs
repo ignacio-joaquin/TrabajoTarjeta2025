@@ -6,7 +6,8 @@ namespace Tarjeta
     public class Tarjeta
     {
         private int saldo;
-        private const int LIMITE_SALDO = 40000;
+        private int saldoPendiente;
+        private const int LIMITE_SALDO = 56000; // Cambiado de 40000 a 56000
         private const int LIMITE_NEGATIVO = -1200;
         private string id;
 
@@ -18,18 +19,25 @@ namespace Tarjeta
         public Tarjeta(int saldoInicial = 0)
         {
             this.saldo = saldoInicial;
+            this.saldoPendiente = 0;
             this.id = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
         }
 
         public Tarjeta(int saldoInicial, string id)
         {
             this.saldo = saldoInicial;
+            this.saldoPendiente = 0;
             this.id = id;
         }
 
         public int Saldo
         {
             get { return saldo; }
+        }
+
+        public int SaldoPendiente
+        {
+            get { return saldoPendiente; }
         }
 
         public string Id
@@ -49,13 +57,33 @@ namespace Tarjeta
                 return false;
             }
 
-            if (saldo + importe > LIMITE_SALDO)
+            // Calcular cuánto se puede acreditar ahora
+            int espacioDisponible = LIMITE_SALDO - saldo;
+            int montoAAcreditar = Math.Min(importe, espacioDisponible);
+            int montoPendiente = importe - montoAAcreditar;
+
+            // Acreditar lo que se pueda
+            saldo += montoAAcreditar;
+            
+            // Guardar el excedente como pendiente
+            if (montoPendiente > 0)
             {
-                return false;
+                saldoPendiente += montoPendiente;
             }
 
-            saldo += importe;
             return true;
+        }
+
+        public void AcreditarCarga()
+        {
+            if (saldoPendiente > 0)
+            {
+                int espacioDisponible = LIMITE_SALDO - saldo;
+                int montoAAcreditar = Math.Min(saldoPendiente, espacioDisponible);
+                
+                saldo += montoAAcreditar;
+                saldoPendiente -= montoAAcreditar;
+            }
         }
 
         public virtual bool Descontar(int monto)
@@ -63,8 +91,13 @@ namespace Tarjeta
             if (saldo - monto >= LIMITE_NEGATIVO)
             {
                 saldo -= monto;
+                
+                // Después de descontar, intentar acreditar saldo pendiente
+                AcreditarCarga();
+                
                 return true;
             }
+
             return false;
         }
 
