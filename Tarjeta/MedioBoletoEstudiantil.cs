@@ -24,6 +24,11 @@ namespace Tarjeta
             get { return "Medio Boleto Estudiantil"; }
         }
 
+        public bool EstaEnFranjaHorariaPermitida()
+        {
+            return HorarioFranquicia.EstaEnFranjaHorariaPermitida(DateTimeProvider.Now);
+        }
+
         public override int CalcularMontoPasaje(int tarifaBase)
         {
             LimpiarViajesAntiguos();
@@ -38,12 +43,18 @@ namespace Tarjeta
 
         public override int CalcularMontoRealAPagar(int tarifaBase)
         {
-
             return CalcularMontoPasaje(tarifaBase);
         }
 
         public bool PuedeViajar()
         {
+            // Verificar franja horaria primero
+            if (!EstaEnFranjaHorariaPermitida())
+            {
+                return false;
+            }
+
+            // Luego verificar límite de tiempo entre viajes (5 minutos)
             if (ultimoViaje.HasValue)
             {
                 TimeSpan tiempoDesdeUltimoViaje = DateTimeProvider.Now - ultimoViaje.Value;
@@ -56,11 +67,14 @@ namespace Tarjeta
             return true;
         }
 
-        public void RegistrarViaje()
+        public new void RegistrarViaje()
         {
             DateTime ahora = DateTimeProvider.Now;
             viajesDelDia.Add(ahora);
             ultimoViaje = ahora;
+            
+            // También llamar al método base para registrar en el contador de uso frecuente
+            base.RegistrarViaje();
         }
 
         public int ViajesHoy()

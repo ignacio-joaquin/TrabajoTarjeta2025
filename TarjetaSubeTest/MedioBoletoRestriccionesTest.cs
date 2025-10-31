@@ -95,7 +95,8 @@ namespace Tarjeta.Tests
             MedioBoletoEstudiantil tarjeta = new MedioBoletoEstudiantil(10000, "MB003");
             Colectivo colectivo = new Colectivo("142");
             
-            DateTime hoy = new DateTime(2024, 1, 15, 23, 50, 0); // Casi fin del día
+            // Cambiar a horarios dentro de franja
+            DateTime hoy = new DateTime(2024, 1, 15, 21, 50, 0); // Lunes 21:50 (dentro de franja - antes de las 22:00)
             
             // Dos viajes el día 15
             DateTimeProvider.SetDateTimeProvider(() => hoy);
@@ -107,7 +108,7 @@ namespace Tarjeta.Tests
             Assert.AreEqual(2, tarjeta.ViajesHoy(), "Debería tener 2 viajes el día 15");
             
             // Primer viaje del día siguiente (debería ser medio boleto otra vez)
-            DateTime diaSiguiente = new DateTime(2024, 1, 16, 0, 10, 0); // Nuevo día
+            DateTime diaSiguiente = new DateTime(2024, 1, 16, 6, 10, 0); // Martes 6:10 (nuevo día, dentro de franja - después de las 6:00)
             DateTimeProvider.SetDateTimeProvider(() => diaSiguiente);
             Boleto boleto = colectivo.PagarCon(tarjeta);
             Assert.IsNotNull(boleto);

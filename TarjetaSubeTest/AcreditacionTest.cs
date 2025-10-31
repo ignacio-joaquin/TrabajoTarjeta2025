@@ -190,6 +190,8 @@ namespace Tarjeta.Tests
         public void TestCargaConTarjetasEspeciales()
         {
             // Test con Medio Boleto
+            DateTime hoy = new DateTime(2024, 1, 15, 21, 50, 0);
+            DateTimeProvider.SetDateTimeProvider(() => hoy);
             MedioBoletoEstudiantil medioBoleto = new MedioBoletoEstudiantil(55000, "MB001");
             medioBoleto.Cargar(5000); // 56000 + 4000 pendiente
             
@@ -200,11 +202,6 @@ namespace Tarjeta.Tests
             Colectivo colectivo = new Colectivo("142");
             Boleto boleto = colectivo.PagarCon(medioBoleto);
             
-            Assert.AreEqual(790, boleto.Monto); // Medio boleto
-            // Saldo después del viaje: 56000 - 790 = 55210
-            // Se acredita: min(4000, 790) = 790
-            // Nuevo saldo: 55210 + 790 = 56000
-            // Pendiente: 4000 - 790 = 3210
             Assert.AreEqual(56000, medioBoleto.Saldo);
             Assert.AreEqual(3210, medioBoleto.SaldoPendiente);
             

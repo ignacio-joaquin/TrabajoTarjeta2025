@@ -23,6 +23,11 @@ namespace Tarjeta
             get { return "Boleto Gratuito Estudiantil"; }
         }
 
+        public bool EstaEnFranjaHorariaPermitida()
+        {
+            return HorarioFranquicia.EstaEnFranjaHorariaPermitida(DateTimeProvider.Now);
+        }
+
         public override bool Descontar(int monto)
         {
             // Para viajes gratuitos siempre permite el viaje
@@ -52,14 +57,16 @@ namespace Tarjeta
 
         public override int CalcularMontoRealAPagar(int tarifaBase)
         {
-
             return CalcularMontoPasaje(tarifaBase);
         }
 
-        public void RegistrarViaje()
+        public new void RegistrarViaje()
         {
             DateTime ahora = DateTimeProvider.Now;
             viajesDelDia.Add(ahora);
+            
+            // También llamar al método base para registrar en el contador de uso frecuente
+            base.RegistrarViaje();
         }
 
         public int ViajesHoy()

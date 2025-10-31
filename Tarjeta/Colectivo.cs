@@ -24,12 +24,30 @@ namespace Tarjeta
                 return null;
             }
 
-            // Validaciones específicas para Medio Boleto
-            if (tarjeta is MedioBoletoEstudiantil medioBoleto)
+            // Validar franja horaria para franquicias
+            if (tarjeta is MedioBoletoEstudiantil medioBoletoEstudiantil)
             {
-                if (!medioBoleto.PuedeViajar())
+                if (!medioBoletoEstudiantil.EstaEnFranjaHorariaPermitida())
                 {
-                    return null; // No pasaron 5 minutos desde el último viaje
+                    return null;
+                }
+                if (!medioBoletoEstudiantil.PuedeViajar())
+                {
+                    return null;
+                }
+            }
+            else if (tarjeta is BoletoGratuitoEstudiantil boletoGratuito)
+            {
+                if (!boletoGratuito.EstaEnFranjaHorariaPermitida())
+                {
+                    return null;
+                }
+            }
+            else if (tarjeta is FranquiciaCompleta franquiciaCompleta)
+            {
+                if (!franquiciaCompleta.EstaEnFranjaHorariaPermitida())
+                {
+                    return null;
                 }
             }
 
@@ -55,7 +73,7 @@ namespace Tarjeta
             // Registrar el viaje para todos los tipos de tarjeta
             tarjeta.RegistrarViaje();
 
-            // Registrar el viaje específico para Medio Boleto (para control de 5 minutos)
+            // Registrar el viaje específico para Medio Boleto Estudiantil (para control de 5 minutos)
             if (tarjeta is MedioBoletoEstudiantil medioBoletoRegistro)
             {
                 medioBoletoRegistro.RegistrarViaje();

@@ -10,6 +10,11 @@ namespace Tarjeta
             get { return "Franquicia Completa"; }
         }
 
+        public bool EstaEnFranjaHorariaPermitida()
+        {
+            return HorarioFranquicia.EstaEnFranjaHorariaPermitida(DateTimeProvider.Now);
+        }
+
         public override bool Descontar(int monto)
         {
             // Viaje gratuito - siempre permite el viaje
@@ -25,7 +30,6 @@ namespace Tarjeta
 
         public override int CalcularMontoRealAPagar(int tarifaBase)
         {
-
             return 0;
         }
     }
