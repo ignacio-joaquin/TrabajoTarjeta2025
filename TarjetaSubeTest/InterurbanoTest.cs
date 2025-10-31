@@ -197,7 +197,7 @@ namespace Tarjeta.Tests
             Assert.AreEqual(8420, tarjeta.Saldo); // 10000 - 1580 = 8420
             
             // Viaje en línea interurbana
-            DateTimeProvider.SetDateTimeProvider(() => new DateTime(2024, 1, 15, 15, 0, 0));
+            DateTimeProvider.SetDateTimeProvider(() => new DateTime(2024, 1, 15, 15, 10, 0));
             Colectivo interurbano = new Colectivo("33", TipoLinea.Interurbana);
             Boleto boletoInterurbano = interurbano.PagarCon(tarjeta);
             Assert.AreEqual(3000, boletoInterurbano.Monto);

@@ -75,11 +75,23 @@ namespace Tarjeta
             // Obtener la tarifa según el tipo de línea
             int tarifaBase = this.Tarifa;
             
-            // Calcular el monto base según el tipo de tarjeta
-            int montoBase = tarjeta.CalcularMontoPasaje(tarifaBase);
-            
-            // Aplicar descuento por uso frecuente
-            int montoAPagar = tarjeta.CalcularMontoConDescuentoFrecuente(montoBase);
+            // Verificar si es trasbordo
+            bool esTrasbordo = tarjeta.PuedeHacerTrasbordo(this.linea);
+            int montoAPagar = 0;
+
+            if (esTrasbordo)
+            {
+                // Trasbordo gratuito
+                montoAPagar = 0;
+            }
+            else
+            {
+                // Calcular el monto base según el tipo de tarjeta
+                int montoBase = tarjeta.CalcularMontoPasaje(tarifaBase);
+                
+                // Aplicar descuento por uso frecuente
+                montoAPagar = tarjeta.CalcularMontoConDescuentoFrecuente(montoBase);
+            }
             
             int saldoAnterior = tarjeta.Saldo;
             
@@ -97,6 +109,12 @@ namespace Tarjeta
             // Registrar el viaje para todos los tipos de tarjeta
             tarjeta.RegistrarViaje();
 
+            // Registrar el viaje reciente para trasbordos (solo si no es trasbordo gratuito)
+            if (!esTrasbordo)
+            {
+                tarjeta.RegistrarViajeReciente(this.linea, montoAPagar);
+            }
+
             // Registrar el viaje específico para Medio Boleto Estudiantil (para control de 5 minutos)
             if (tarjeta is MedioBoletoEstudiantil medioBoletoRegistro)
             {
@@ -110,10 +128,11 @@ namespace Tarjeta
             }
 
             // Calcular el descuento frecuente aplicado
-            int descuentoFrecuente = montoBase - montoAPagar;
+            int descuentoFrecuente = esTrasbordo ? 0 : (tarifaBase - montoAPagar);
 
             return new Boleto(montoAPagar, this.linea, tarjeta.Saldo, 
-                            tarjeta.TipoTarjeta, tarjeta.Id, montoTotalAbonado, descuentoFrecuente);
+                            tarjeta.TipoTarjeta, tarjeta.Id, montoTotalAbonado, 
+                            descuentoFrecuente, esTrasbordo);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Tarjeta
 {
@@ -12,6 +13,7 @@ namespace Tarjeta
         private string id;
         private int viajesEsteMes;
         private DateTime ultimoViajeMes;
+        private List<ViajeReciente> viajesRecientes;
 
         private static readonly HashSet<int> CargasAceptadas = new HashSet<int>
         {
@@ -25,6 +27,7 @@ namespace Tarjeta
             this.id = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
             this.viajesEsteMes = 0;
             this.ultimoViajeMes = DateTime.MinValue;
+            this.viajesRecientes = new List<ViajeReciente>();
         }
 
         public Tarjeta(int saldoInicial, string id)
@@ -34,6 +37,7 @@ namespace Tarjeta
             this.id = id;
             this.viajesEsteMes = 0;
             this.ultimoViajeMes = DateTime.MinValue;
+            this.viajesRecientes = new List<ViajeReciente>();
         }
 
         public int Saldo
@@ -58,6 +62,11 @@ namespace Tarjeta
                 VerificarCambioDeMes();
                 return viajesEsteMes; 
             }
+        }
+
+        public List<ViajeReciente> ViajesRecientes
+        {
+            get { return viajesRecientes; }
         }
 
         public virtual string TipoTarjeta
@@ -126,47 +135,70 @@ namespace Tarjeta
         public virtual int CalcularMontoConDescuentoFrecuente(int tarifaBase)
         {
             VerificarCambioDeMes();
-
-            viajesEsteMes++; // Contar el viaje actual
+            viajesEsteMes++;
             
             // Solo aplica para tarjetas normales (no para las especiales)
             if (this is MedioBoletoEstudiantil || this is BoletoGratuitoEstudiantil || this is FranquiciaCompleta)
             {
-            viajesEsteMes--; // Revertir el conteo del viaje actual
-
+                viajesEsteMes--; 
                 return tarifaBase;
             }
 
             // Aplicar descuentos según cantidad de viajes
             if (viajesEsteMes >= 30 && viajesEsteMes <= 59)
             {
+                viajesEsteMes--; 
                 // 20% de descuento
-            viajesEsteMes--; // Revertir el conteo del viaje actual
-             
                 return (int)(tarifaBase * 0.8);
             }
             else if (viajesEsteMes >= 60 && viajesEsteMes <= 80)
             {
+                viajesEsteMes--; 
                 // 25% de descuento
-            viajesEsteMes--; // Revertir el conteo del viaje actual
-                
                 return (int)(tarifaBase * 0.75);
             }
             else
+                viajesEsteMes--; 
             {
                 // Viajes 1-29 y 81+ : tarifa normal
-            viajesEsteMes--; // Revertir el conteo del viaje actual
-
                 return tarifaBase;
             }
-
         }
 
-        public void RegistrarViaje()
+        public virtual void RegistrarViaje()
         {
             VerificarCambioDeMes();
             viajesEsteMes++;
             ultimoViajeMes = DateTimeProvider.Now;
+        }
+
+        public void RegistrarViajeReciente(string linea, int monto)
+        {
+            LimpiarViajesRecientesExpirados();
+            viajesRecientes.Add(new ViajeReciente(DateTimeProvider.Now, linea, monto));
+        }
+
+        public bool PuedeHacerTrasbordo(string lineaActual)
+        {
+            LimpiarViajesRecientesExpirados();
+            
+            if (!TrasbordoHelper.EstaEnFranjaHorariaTrasbordo(DateTimeProvider.Now))
+            {
+                return false;
+            }
+
+            // Buscar viajes recientes en líneas diferentes
+            return viajesRecientes.Any(v => 
+                v.Linea != lineaActual && 
+                v.EsValidoParaTrasbordo(DateTimeProvider.Now));
+        }
+
+        private void LimpiarViajesRecientesExpirados()
+        {
+            DateTime ahora = DateTimeProvider.Now;
+            viajesRecientes = viajesRecientes
+                .Where(v => v.EsValidoParaTrasbordo(ahora))
+                .ToList();
         }
 
         public int ObtenerDescuentoAplicado(int tarifaBase)
@@ -194,6 +226,12 @@ namespace Tarjeta
         {
             this.viajesEsteMes = viajes;
             this.ultimoViajeMes = ultimoViaje;
+        }
+
+        // Método para testing - permite establecer viajes recientes
+        public void SetViajesRecientesParaTesting(List<ViajeReciente> viajes)
+        {
+            this.viajesRecientes = viajes;
         }
     }
 }
