@@ -1,20 +1,41 @@
+
 using System;
 
 namespace Tarjeta
 {
     public class Colectivo
     {
-        private const int TARIFA_BASICA = 1580;
+        private const int TARIFA_URBANA = 1580;
+        private const int TARIFA_INTERURBANA = 3000;
         private string linea;
+        private TipoLinea tipoLinea;
 
-        public Colectivo(string linea)
+        public Colectivo(string linea) : this(linea, TipoLinea.Urbana)
+        {
+        }
+
+        public Colectivo(string linea, TipoLinea tipoLinea)
         {
             this.linea = linea;
+            this.tipoLinea = tipoLinea;
         }
 
         public string Linea
         {
             get { return linea; }
+        }
+
+        public TipoLinea TipoLinea
+        {
+            get { return tipoLinea; }
+        }
+
+        public int Tarifa
+        {
+            get 
+            { 
+                return tipoLinea == TipoLinea.Interurbana ? TARIFA_INTERURBANA : TARIFA_URBANA; 
+            }
         }
 
         public Boleto PagarCon(Tarjeta tarjeta)
@@ -51,8 +72,11 @@ namespace Tarjeta
                 }
             }
 
+            // Obtener la tarifa según el tipo de línea
+            int tarifaBase = this.Tarifa;
+            
             // Calcular el monto base según el tipo de tarjeta
-            int montoBase = tarjeta.CalcularMontoPasaje(TARIFA_BASICA);
+            int montoBase = tarjeta.CalcularMontoPasaje(tarifaBase);
             
             // Aplicar descuento por uso frecuente
             int montoAPagar = tarjeta.CalcularMontoConDescuentoFrecuente(montoBase);
