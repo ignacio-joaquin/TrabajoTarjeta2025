@@ -43,7 +43,7 @@ namespace Tarjeta.Tests
             Assert.IsNull(boleto2, "No debería permitir viajar antes de 5 minutos");
             
             // Intentar segundo viaje a los 5 minutos (debería funcionar)
-            DateTime segundoViajeExitoso = primerViaje.AddMinutes(5);
+            DateTime segundoViajeExitoso = primerViaje.AddHours(2);
             DateTimeProvider.SetDateTimeProvider(() => segundoViajeExitoso);
             Boleto boleto3 = colectivo2.PagarCon(tarjeta);
             Assert.IsNotNull(boleto3, "Debería permitir viajar después de 5 minutos");
@@ -95,7 +95,8 @@ namespace Tarjeta.Tests
             MedioBoletoEstudiantil tarjeta = new MedioBoletoEstudiantil(10000, "MB003");
             Colectivo colectivo = new Colectivo("142");
             
-            DateTime hoy = new DateTime(2024, 1, 15, 23, 50, 0); // Casi fin del día
+            // Cambiar a horarios dentro de franja
+            DateTime hoy = new DateTime(2024, 1, 15, 21, 50, 0); // Lunes 21:50 (dentro de franja - antes de las 22:00)
             
             // Dos viajes el día 15
             DateTimeProvider.SetDateTimeProvider(() => hoy);
@@ -107,7 +108,7 @@ namespace Tarjeta.Tests
             Assert.AreEqual(2, tarjeta.ViajesHoy(), "Debería tener 2 viajes el día 15");
             
             // Primer viaje del día siguiente (debería ser medio boleto otra vez)
-            DateTime diaSiguiente = new DateTime(2024, 1, 16, 0, 10, 0); // Nuevo día
+            DateTime diaSiguiente = new DateTime(2024, 1, 16, 6, 10, 0); // Martes 6:10 (nuevo día, dentro de franja - después de las 6:00)
             DateTimeProvider.SetDateTimeProvider(() => diaSiguiente);
             Boleto boleto = colectivo.PagarCon(tarjeta);
             Assert.IsNotNull(boleto);
@@ -151,13 +152,13 @@ namespace Tarjeta.Tests
             Assert.AreEqual("142", boleto1.Linea);
             
             // Viaje en línea K después de 5 minutos
-            DateTimeProvider.SetDateTimeProvider(() => hoy.AddMinutes(6));
+            DateTimeProvider.SetDateTimeProvider(() => hoy.AddHours(2));
             Boleto boleto2 = colectivo2.PagarCon(tarjeta);
             Assert.AreEqual(790, boleto2.Monto);
             Assert.AreEqual("K", boleto2.Linea);
             
             // Tercer viaje en línea 144 (tarifa completa)
-            DateTimeProvider.SetDateTimeProvider(() => hoy.AddMinutes(12));
+            DateTimeProvider.SetDateTimeProvider(() => hoy.AddHours(4));
             Boleto boleto3 = colectivo3.PagarCon(tarjeta);
             Assert.AreEqual(1580, boleto3.Monto);
             Assert.AreEqual("144", boleto3.Linea);

@@ -1,3 +1,4 @@
+
 using System;
 
 namespace Tarjeta
@@ -11,9 +12,10 @@ namespace Tarjeta
         private string tipoTarjeta;
         private string idTarjeta;
         private int montoTotalAbonado;
-        private bool tuvoRecargo;
+        private int descuentoFrecuente;
+        private bool esTrasbordo;
 
-        public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado, bool tuvoRecargo)
+        public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado, int descuentoFrecuente, bool esTrasbordo)
         {
             this.monto = monto;
             this.linea = linea;
@@ -22,10 +24,11 @@ namespace Tarjeta
             this.tipoTarjeta = tipoTarjeta;
             this.idTarjeta = idTarjeta;
             this.montoTotalAbonado = montoTotalAbonado;
-            this.tuvoRecargo = tuvoRecargo;
+            this.descuentoFrecuente = descuentoFrecuente;
+            this.esTrasbordo = esTrasbordo;
         }
 
-        public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado, bool tuvoRecargo, DateTime fechaEspecifica)
+        public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado, int descuentoFrecuente, bool esTrasbordo, DateTime fechaEspecifica)
         {
             this.monto = monto;
             this.linea = linea;
@@ -34,7 +37,19 @@ namespace Tarjeta
             this.tipoTarjeta = tipoTarjeta;
             this.idTarjeta = idTarjeta;
             this.montoTotalAbonado = montoTotalAbonado;
-            this.tuvoRecargo = tuvoRecargo;
+            this.descuentoFrecuente = descuentoFrecuente;
+            this.esTrasbordo = esTrasbordo;
+        }
+
+        // Constructor simplificado para tests existentes
+        public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado, int descuentoFrecuente)
+            : this(monto, linea, saldoRestante, tipoTarjeta, idTarjeta, montoTotalAbonado, descuentoFrecuente, false)
+        {
+        }
+
+        public Boleto(int monto, string linea, int saldoRestante, string tipoTarjeta, string idTarjeta, int montoTotalAbonado, DateTime fechaEspecifica)
+            : this(monto, linea, saldoRestante, tipoTarjeta, idTarjeta, montoTotalAbonado, 0, false, fechaEspecifica)
+        {
         }
 
         public int Monto
@@ -72,16 +87,23 @@ namespace Tarjeta
             get { return montoTotalAbonado; }
         }
 
-        public bool TuvoRecargo
+        public int DescuentoFrecuente
         {
-            get { return tuvoRecargo; }
+            get { return descuentoFrecuente; }
+        }
+
+        public bool EsTrasbordo
+        {
+            get { return esTrasbordo; }
         }
 
         public override string ToString()
         {
-            string recargoInfo = tuvoRecargo ? $" (incluye recargo por saldo negativo)" : "";
+            string descuentoInfo = descuentoFrecuente > 0 ? $" [Descuento frecuente: -${descuentoFrecuente}]" : "";
+            string trasbordoInfo = esTrasbordo ? " [TRASBORDO GRATUITO]" : "";
             return $"Boleto - Línea: {linea}, Tipo: {tipoTarjeta}, ID: {idTarjeta}, " +
-                   $"Monto: ${monto}{recargoInfo}, Total abonado: ${montoTotalAbonado}, " +
+                   $"Monto: ${monto}{descuentoInfo}{trasbordoInfo}, " +
+                   $"Total abonado: ${montoTotalAbonado}, " +
                    $"Fecha: {fecha:dd/MM/yyyy HH:mm}, Saldo restante: ${saldoRestante}";
         }
     }

@@ -113,19 +113,19 @@ namespace Tarjeta.Tests
             BoletoGratuitoEstudiantil tarjeta = new BoletoGratuitoEstudiantil(5000, "BG004");
             Colectivo colectivo = new Colectivo("142");
             
-            DateTime finDeDia = new DateTime(2024, 1, 15, 23, 30, 0);
+            DateTime finDeDia = new DateTime(2024, 1, 15, 21, 30, 0);
             
             // Dos viajes el día 15
             DateTimeProvider.SetDateTimeProvider(() => finDeDia);
             colectivo.PagarCon(tarjeta); // Viaje 1 gratuito
             
-            DateTimeProvider.SetDateTimeProvider(() => finDeDia.AddMinutes(20));
+            DateTimeProvider.SetDateTimeProvider(() => finDeDia.AddMinutes(1));
             colectivo.PagarCon(tarjeta); // Viaje 2 gratuito
             
             Assert.AreEqual(2, tarjeta.ViajesHoy(), "Debería tener 2 viajes el día 15");
             
             // Primer viaje del día siguiente (debería ser gratuito otra vez)
-            DateTime diaSiguiente = new DateTime(2024, 1, 16, 0, 30, 0); // Nuevo día
+            DateTime diaSiguiente = new DateTime(2024, 1, 16, 10, 30, 0); // Nuevo día
             DateTimeProvider.SetDateTimeProvider(() => diaSiguiente);
             Boleto boleto = colectivo.PagarCon(tarjeta);
             Assert.IsNotNull(boleto);

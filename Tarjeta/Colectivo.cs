@@ -1,20 +1,41 @@
+
 using System;
 
 namespace Tarjeta
 {
     public class Colectivo
     {
-        private const int TARIFA_BASICA = 1580;
+        private const int TARIFA_URBANA = 1580;
+        private const int TARIFA_INTERURBANA = 3000;
         private string linea;
+        private TipoLinea tipoLinea;
 
-        public Colectivo(string linea)
+        public Colectivo(string linea) : this(linea, TipoLinea.Urbana)
+        {
+        }
+
+        public Colectivo(string linea, TipoLinea tipoLinea)
         {
             this.linea = linea;
+            this.tipoLinea = tipoLinea;
         }
 
         public string Linea
         {
             get { return linea; }
+        }
+
+        public TipoLinea TipoLinea
+        {
+            get { return tipoLinea; }
+        }
+
+        public int Tarifa
+        {
+            get 
+            { 
+                return tipoLinea == TipoLinea.Interurbana ? TARIFA_INTERURBANA : TARIFA_URBANA; 
+            }
         }
 
         public Boleto PagarCon(Tarjeta tarjeta)
@@ -24,17 +45,54 @@ namespace Tarjeta
                 return null;
             }
 
-            // Validaciones específicas para Medio Boleto
-            if (tarjeta is MedioBoletoEstudiantil medioBoleto)
+            // Validar franja horaria para franquicias
+            if (tarjeta is MedioBoletoEstudiantil medioBoletoEstudiantil)
             {
-                if (!medioBoleto.PuedeViajar())
+                if (!medioBoletoEstudiantil.EstaEnFranjaHorariaPermitida())
                 {
-                    return null; // No pasaron 5 minutos desde el último viaje
+                    return null;
+                }
+                if (!medioBoletoEstudiantil.PuedeViajar())
+                {
+                    return null;
+                }
+            }
+            else if (tarjeta is BoletoGratuitoEstudiantil boletoGratuito)
+            {
+                if (!boletoGratuito.EstaEnFranjaHorariaPermitida())
+                {
+                    return null;
+                }
+            }
+            else if (tarjeta is FranquiciaCompleta franquiciaCompleta)
+            {
+                if (!franquiciaCompleta.EstaEnFranjaHorariaPermitida())
+                {
+                    return null;
                 }
             }
 
-            bool tuvoRecargo;
-            int montoAPagar = tarjeta.CalcularMontoRealAPagar(TARIFA_BASICA, out tuvoRecargo);
+            // Obtener la tarifa según el tipo de línea
+            int tarifaBase = this.Tarifa;
+            
+            // Verificar si es trasbordo
+            bool esTrasbordo = tarjeta.PuedeHacerTrasbordo(this.linea);
+            int montoAPagar = 0;
+
+            if (esTrasbordo)
+            {
+                // Trasbordo gratuito
+                montoAPagar = 0;
+            }
+            else
+            {
+                // Calcular el monto base según el tipo de tarjeta
+                int montoBase = tarjeta.CalcularMontoPasaje(tarifaBase);
+                
+                // Aplicar descuento por uso frecuente
+                montoAPagar = tarjeta.CalcularMontoConDescuentoFrecuente(montoBase);
+            }
+            
             int saldoAnterior = tarjeta.Saldo;
             
             int montoTotalAbonado = montoAPagar;
@@ -48,20 +106,33 @@ namespace Tarjeta
                 return null;
             }
 
-            // Registrar el viaje para Medio Boleto
+            // Registrar el viaje para todos los tipos de tarjeta
+            tarjeta.RegistrarViaje();
+
+            // Registrar el viaje reciente para trasbordos (solo si no es trasbordo gratuito)
+            if (!esTrasbordo)
+            {
+                tarjeta.RegistrarViajeReciente(this.linea, montoAPagar);
+            }
+
+            // Registrar el viaje específico para Medio Boleto Estudiantil (para control de 5 minutos)
             if (tarjeta is MedioBoletoEstudiantil medioBoletoRegistro)
             {
                 medioBoletoRegistro.RegistrarViaje();
             }
 
-            // Registrar el viaje para Boleto Gratuito
+            // Registrar el viaje específico para Boleto Gratuito (para control de 2 viajes gratis)
             if (tarjeta is BoletoGratuitoEstudiantil boletoGratuitoRegistro)
             {
                 boletoGratuitoRegistro.RegistrarViaje();
             }
 
+            // Calcular el descuento frecuente aplicado
+            int descuentoFrecuente = esTrasbordo ? 0 : (tarifaBase - montoAPagar);
+
             return new Boleto(montoAPagar, this.linea, tarjeta.Saldo, 
-                            tarjeta.TipoTarjeta, tarjeta.Id, montoTotalAbonado, tuvoRecargo);
+                            tarjeta.TipoTarjeta, tarjeta.Id, montoTotalAbonado, 
+                            descuentoFrecuente, esTrasbordo);
         }
     }
 }
