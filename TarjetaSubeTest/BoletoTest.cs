@@ -7,6 +7,22 @@ namespace Tarjeta.Tests
     [TestFixture]
     public class BoletoTests
     {
+<<<<<<< Updated upstream
+=======
+        [SetUp]
+        public void Setup()
+        {
+            DateTimeProvider.ResetToDefault();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            DateTimeProvider.ResetToDefault();
+        }
+
+
+>>>>>>> Stashed changes
         [Test]
         public void TestConstructorBoleto()
         {
